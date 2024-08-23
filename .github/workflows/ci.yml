@@ -28,17 +28,3 @@ jobs:
     - name: Build project
       run: npm run build
 
-    # Email notification on failure
-    - name: Send failure email
-      if: failure()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.google.com
-        server_port: 587
-        username: ${{ secrets.SMTP_USERNAME }}
-        password: ${{ secrets.SMTP_PASSWORD }}
-        subject: "GitHub Actions Workflow Failed"
-        body: "The workflow failed in the ${{ github.job }} job. Please check the logs."
-        to: msihraaditya675@gmail.com
-        from: github-actions@example.com
-
