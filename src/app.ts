@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { connectDB } from './config/db';
 
 // Import routes
 import stationRoutes from './routes/stationRoutes';
@@ -9,7 +10,7 @@ import navigationRoutes from './routes/navigationRoutes';
 import authRoutes from './routes/authRoutes';
 
 const app = express();
-
+connectDB();
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
