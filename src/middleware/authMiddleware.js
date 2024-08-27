@@ -1,20 +1,21 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateJWT = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const authenticateJWT = (req, res, next) => {
-    var _a;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-    if (!token)
-        return res.sendStatus(401);
-    jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
-        if (err)
-            return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
+exports.isAuthenticated = exports.isAdmin = void 0;
+// Middleware to check if user is admin
+const isAdmin = (req, res, next) => {
+    // Assuming `req.user` contains user info after authentication
+    if (req.user && req.user.role === 'admin') {
+        return next();
+    }
+    res.status(403).send('Forbidden: Admins only.');
 };
-exports.authenticateJWT = authenticateJWT;
+exports.isAdmin = isAdmin;
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+    // Assuming `req.user` contains user info after authentication
+    if (req.user) {
+        return next();
+    }
+    res.status(401).send('Unauthorized: Please log in.');
+};
+exports.isAuthenticated = isAuthenticated;

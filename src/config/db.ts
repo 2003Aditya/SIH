@@ -1,17 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
+import dotenv from 'dotenv';
 
-const mongoURI = 'mongodb://localhost:27017/yourDatabaseName'; // Replace with your MongoDB URI
+// Load environment variables from .env file
+dotenv.config();
 
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected');
+    const dbURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/default-db'; // Fallback to local if env var not set
+
+    // Connect to MongoDB
+    await mongoose.connect(dbURI,);
+    console.log('MongoDB connected successfully.');
   } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1); // Exit process with failure
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1); // Exit the process if connection fails
   }
 };
+
+export default connectDB;
 

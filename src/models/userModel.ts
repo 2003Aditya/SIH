@@ -1,18 +1,30 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import mongoose, { Document, Schema } from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
-  password: String,
+interface IUser extends Document {
+  username: string;
+  password: string;
+  role: string; // Adjust as needed, e.g., 'admin' or 'client'
+}
+
+const userSchema: Schema = new Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: ['admin', 'client'], // Adjust according to your roles
+  },
+}, {
+  timestamps: true, // Automatically add createdAt and updatedAt fields
 });
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  const hashedPassword = await bcrypt.hash(this.password, 10);
-  this.password = hashedPassword;
-  next();
-});
+const User = mongoose.model<IUser>('User', userSchema);
 
-const User = mongoose.model('User', userSchema);
 export default User;
-

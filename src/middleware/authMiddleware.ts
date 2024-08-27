@@ -1,14 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 
-export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err: any, user: any) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
+// Middleware to check if user is admin
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  // Assuming `req.user` contains user info after authentication
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+  res.status(403).send('Forbidden: Admins only.');
 };
 
+// Middleware to check if user is authenticated
+export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  // Assuming `req.user` contains user info after authentication
+  if (req.user) {
+    return next();
+  }
+  res.status(401).send('Unauthorized: Please log in.');
+};

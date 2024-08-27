@@ -1,11 +1,31 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const navigationSchema = new mongoose.Schema({
-  startLocation: String,
-  endLocation: String,
-  directions: [String],
+interface IStreetView extends Document {
+  stationId: mongoose.Types.ObjectId;
+  imageUrl: string;
+  description?: string;
+  uploadedAt: Date;
+}
+
+const streetViewSchema = new Schema<IStreetView>({
+  stationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Station',
+    required: true,
+  },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  uploadedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Navigation = mongoose.model('Navigation', navigationSchema);
-export default Navigation;
+const StreetView = mongoose.model<IStreetView>('StreetView', streetViewSchema);
 
+export default StreetView;

@@ -6,10 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const db_1 = __importDefault(require("./config/db"));
 // Import routes
 const stationRoutes_1 = __importDefault(require("./routes/stationRoutes"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const app = (0, express_1.default)();
+(0, db_1.default)();
 // Middleware
 app.use(body_parser_1.default.json());
 app.use((0, cors_1.default)());
